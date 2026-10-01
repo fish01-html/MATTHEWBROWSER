@@ -8,10 +8,10 @@ let frame;
 
 function normalize(input) {
   const value = input.trim();
-  if (!value) return "https://www.google.com/";
+  if (!value) return "https://duckduckgo.com/";
   if (/^https?:\/\//i.test(value)) return value;
   if (/^[\w.-]+\.[a-z]{2,}(?:[/:?#]|$)/i.test(value)) return `https://${value}`;
-  return `https://www.google.com/search?q=${encodeURIComponent(value)}`;
+  return `https://duckduckgo.com/?q=${encodeURIComponent(value)}`;
 }
 function loadScript(src) { return new Promise((resolve,reject)=>{ const s=document.createElement("script"); s.src=src; s.onload=resolve; s.onerror=()=>reject(new Error(`Failed to load ${src}`)); document.head.append(s); }); }
 async function boot() {
@@ -39,3 +39,7 @@ $("#homeNav").addEventListener("submit",e=>{e.preventDefault();go(homeAddress.va
 $("#back").onclick=()=>frame?.back(); $("#forward").onclick=()=>frame?.forward(); $("#reload").onclick=()=>frame?.reload();
 iframe.addEventListener("load",()=>{status.textContent="Ready"});
 boot().catch(err=>{console.error(err);status.textContent="Error";start.innerHTML=`<h1>Matthew Browser</h1><p>Startup failed: ${String(err.message||err)}</p><p>Run this project through its Node server, not by opening index.html directly.</p>`;});
+
+$("#home").onclick=()=>go("https://duckduckgo.com/");
+document.querySelectorAll("[data-url]").forEach(b=>b.addEventListener("click",()=>go(b.dataset.url)));
+document.querySelector(".newtab")?.addEventListener("click",()=>{iframe.style.display="none";start.style.display="flex";address.value="";homeAddress.value="";homeAddress.focus();});
